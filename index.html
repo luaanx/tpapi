@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overwatch Heroes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            text-align: center;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        .heroes-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .hero-card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            width: 200px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+        }
+        .hero-card img {
+            max-width: 100px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .hero-card:hover {
+            box-shadow: 2px 2px 12px rgba(0,0,0,0.2);
+        }
+
+
+        .maps-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .map-card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            width: 600px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+        }
+        .map-card img {
+            max-width: 500px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .map-card:hover {
+            box-shadow: 2px 2px 12px rgba(0,0,0,0.2);
+        }
+
+
+
+        .gamemode-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .gamemode-card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            width: 600px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+        }
+        .gamemode-card img {
+            max-width: 500px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .gamemode-card:hover {
+            box-shadow: 2px 2px 12px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Overwatch Heroes</h1>
+
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Digite o nome do herói">
+        <button onclick="searchHero()">Buscar</button>
+    </div>
+
+    <div class="search-container">
+        <input type="text" id="search-role" placeholder="Digite a função do herói">
+        <button onclick="searchRole()">Buscar</button>
+    </div>
+
+    <div class="search-container">
+        <input type="text" id="search-map" placeholder="Digite o nome do Mapa">
+        <button onclick="searchMap()">Buscar</button>
+    </div>
+
+    <div class="search-container">
+        <input type="text" id="search-gamemode" placeholder="Digite o Modo de Jogo">
+        <button onclick="searchGamemode()">Buscar</button>
+    </div>
+
+    <div class="heroes-container" id="heroes-container">
+
+    <div class="maps-container" id="maps-container">   
+       
+    <div class="gamemode-container" id="gamemode-container">   
+
+    </div>
+    </div>
+    </div>
+
+    <script>
+        let allHeroes = [];
+        let allMaps = [];
+        let allGamemodes = [];
+
+        fetch('https://overfast-api.tekrop.fr/heroes')
+            .then(response => response.json())
+            .then(data => {
+                allHeroes = data;
+                console.log(data);
+            })
+            
+
+        fetch('https://overfast-api.tekrop.fr/maps')
+            .then(response => response.json())
+            .then(data => {
+                allMaps = data;
+                console.log(data);
+            })   
+            
+            
+        fetch('https://overfast-api.tekrop.fr/gamemodes')
+            .then(response => response.json())
+            .then(data => {
+                allGamemodes = data;
+                console.log(data);
+            })   
+            
+
+
+        function displayHeroes(heroes) {
+            const heroesContainer = document.getElementById('heroes-container');
+            heroesContainer.innerHTML = '';
+
+            heroes.forEach(hero => {
+                const heroCard = document.createElement('div');
+                heroCard.className = 'hero-card';
+                
+                heroCard.innerHTML = `
+                    <img src="${hero.portrait}" alt="${hero.name}">
+                    <h3>${hero.name}</h3>
+                    <p><strong>Função:</strong> ${hero.role}</p>
+                `;
+                
+                heroesContainer.appendChild(heroCard);
+            });
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------
+
+        function displayMaps(maps) {
+            const mapsContainer = document.getElementById('maps-container');
+            mapsContainer.innerHTML = '';
+
+
+            maps.forEach(map => {
+                const mapCard = document.createElement('div');
+                mapCard.className = 'map-card';
+                
+                mapCard.innerHTML = `
+                    <img src="${map.screenshot}" alt="${map.name}">
+                    <h3>${map.name}</h3>
+                    <p><strong>Modo de Jogo: </strong>${map.gamemodes}</h3>
+                    <p><strong>Localização:</strong> ${map.location}</p>
+                `;
+                
+                mapsContainer.appendChild(mapCard);
+            });
+        }
+
+        function displayGamemodes(gamemodes){
+            const gamemodeContainer = document.getElementById('gamemode-container');
+            gamemodeContainer.innerHTML = '';
+
+            gamemodes.forEach(gamemode => {
+                const gamemodeCard = document.createElement('div');
+                gamemodeCard.className = 'gamemode-card';
+                
+                gamemodeCard.innerHTML = `
+                    <img src="${gamemode.screenshot}" alt="${gamemode.name}">
+                    <h3>${gamemode.name}</h3>
+                    <p><strong>Descrição:</strong> ${gamemode.description}</p>
+                    
+                `;
+                
+                gamemodeContainer.appendChild(gamemodeCard);
+            });
+
+        }
+            
+        //-----------------------------------------------------------------------------------------------------------------------
+
+        function searchHero() {
+            const searchInput = document.getElementById('search-input').value.toLowerCase();
+
+            const filteredHeroes = allHeroes.filter(hero => 
+                hero.name.toLowerCase().includes(searchInput)
+            );
+
+            displayHeroes(filteredHeroes);
+        }
+
+        function searchRole(){
+            const searchRole = document.getElementById('search-role').value.toLowerCase();
+            
+            const filteredRoles = allHeroes.filter(hero => 
+                hero.role.toLowerCase().includes(searchRole)
+            );
+
+            displayHeroes(filteredRoles);
+        }
+
+        function searchMap() {
+            const searchMap = document.getElementById('search-map').value.toLowerCase();
+
+            const filteredMaps = allMaps.filter(map => 
+                map.name.toLowerCase().includes(searchMap)
+            );
+
+            displayMaps(filteredMaps);
+        }    
+
+        function searchGamemode() {
+            const searchGamemode = document.getElementById('search-gamemode').value.toLowerCase();
+
+            const filteredGamemode = allGamemodes.filter(gamemode => 
+                gamemode.name.toLowerCase().includes(searchGamemode)
+            );
+
+            displayGamemodes(filteredGamemode);
+        }   
+
+    </script>
+</body>
+</html>
